@@ -1,15 +1,15 @@
-set number
-set hlsearch
-set cindent
-set tabstop=4
-set nocompatible
-filetype on
-syntax on
-syntax enable
-set background=light
-colorscheme solarized
-"vundle start
 set nocompatible              " be iMproved, required
+set nu
+set ts=4
+set hlsearch
+set wildmode=full
+set wildmenu
+set path=.,/usr/local/go/src
+set tags +=~/note/gnuclib/glibc/tags;
+"colorscheme ron
+colorscheme morning
+set cursorline
+hi CursorLine   cterm=NONE ctermbg=4 ctermfg=white guibg=green guifg=white
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
@@ -21,6 +21,7 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
+
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
 " plugin on GitHub repo
@@ -30,10 +31,14 @@ Plugin 'tpope/vim-fugitive'
 " Git plugin not hosted on GitHub
 Plugin 'git://git.wincent.com/command-t.git'
 " git repos on your local machine (i.e. when working on your own plugin)
-"Plugin 'file:///home/gmarik/path/to/plugin'
+Plugin 'file:///home/gmarik/path/to/plugin'
 " The sparkup vim script is in a subdirectory of this repo called vim.
 " Pass the path to set the runtimepath properly.
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+Plugin 'fatih/vim-go'
+Plugin 'scrooloose/nerdtree'
+Plugin 'ianva/vim-youdao-translater'
+Plugin 'Valloric/YouCompleteMe'
 " Install L9 and avoid a Naming conflict if you've already installed a
 " different version somewhere else.
 " Plugin 'ascenator/L9', {'name': 'newL9'}
@@ -52,33 +57,32 @@ filetype plugin indent on    " required
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
-"Plugin 'fatih/vim-go'
-Plugin 'git://github.com/scrooloose/nerdtree.git'
-Plugin 'git://github.com/altercation/solarized.git'
-"Plugin 'git://github.com/vim-syntastic/syntastic.git'
-Plugin 'Valloric/YouCompleteMe'
-let g:clang_use_library = 1
-let g:clang_library_path = '/usr/lib/llvm-3.5/lib/'
 
+let g:go_auto_type_info=1
+
+
+"let g:deoplete#omni#input_patterns 
+set ic
 inoremap ( ()<esc>i
 inoremap { {}<esc>i
+inoremap [ []<esc>i
+inoremap ` ``<esc>i
+inoremap " ""<esc>i
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
-"------syntastic
-"execute pathogen#infect()
+nnoremap <S-q> :w<CR>:shell<CR>
 
-"-------------tags设置
-set tags=tags; "自动查找
-set autochdir "自动切换目录
-nnoremap <c-]> :w<enter><c-]>
+ " path to directory where library can be found
+let g:clang_library_path='/usr/include'
+ " or path directly to the library file
+" let g:clang_library_path='/usr/lib64/libclang.so.3.8'
+"
 
-let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
 
+"youdao
+noremap <leader>yd :<C-u>Yde<CR>
+nnoremap <C-F> yaw<esc>:!yd <C-R>0<CR>
 
-"------支持go语法高亮
-"  if exists("g:did_load_filetypes")
-"    filetype off
-"    filetype plugin indent off
-"  endif
-"set runtimepath+=$GOROOT/misc/vim " replace $GOROOT with the output of: go env GOROOT
-"filetype plugin indent on
-"syntax on
+cnoremap <C-G> !go test -v -test.run <C-R>0<CR>
+
